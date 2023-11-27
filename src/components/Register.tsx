@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import {z} from "zod"
 import {
   Card,
   CardContent,
@@ -23,15 +22,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Checkbox } from "./ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox"
+import { useToast } from "@/components/ui/use-toast"
 
-import { registerSchema } from "@/validators/register"
 import { useForm } from "react-hook-form"
+import { registerSchema } from "@/validators/register"
+import {z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-
+import { postFormSectors } from "@/api/api"
+import useSectors from "@/hooks/useSectors"
 type Input = z.infer<typeof registerSchema>
 
+
 function Register() {
+  const {data, loading, error} = useSectors()
+  const {toast} = useToast()
   const form = useForm<Input>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -41,8 +46,18 @@ function Register() {
     }
   })
 
-  const handleSubmit = (data: Input) => {
-    console.log(data)
+  const submitForm = async(inputData: Input) => {
+    const {name, sector, terms} = inputData
+    await postFormSectors({name: name.toLocaleLowerCase(), sector, terms})
+    
+    toast({
+      title: "Data send to backend",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white p-2">{JSON.stringify(inputData, null, 2)}</code>
+        </pre>
+      ),
+    })
   }
 
   return (
@@ -53,7 +68,7 @@ function Register() {
       </CardHeader>
       <CardContent className="flex flex-col">
       <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-7">
+      <form onSubmit={form.handleSubmit(submitForm)} className="space-y-7">
         <FormField
           control={form.control}
           name="name"
@@ -80,9 +95,13 @@ function Register() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
+                  {loading && <p>Loading sectors...</p>}
+                  {error && <p>Error fetching sectors: {error}</p>}
+                  {data.map((sector) => (
+                    <SelectItem key={sector._id} value={sector.name}>
+                      {sector.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
