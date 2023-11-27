@@ -1,7 +1,8 @@
-import './App.css'
-import { ThemeProvider } from './components/theme-provider'
-import { ModeToggle } from './components/ui/mode-toggle'
-import Register from './components/Register'
+import '@/App.css'
+import { ThemeProvider } from '@/components/theme-provider'
+import { ModeToggle } from '@/components/ui/mode-toggle'
+import Register from '@/components/Register'
+import { Toaster } from '@/components/ui/toaster'
 function App() {
 
   return (
@@ -10,6 +11,7 @@ function App() {
       <div className='min-h-screen flex flex-col  items-center pt-10'>
         <ModeToggle  className="fixed top-6 right-6"/>
         <Register />
+        <Toaster />
       </div>
 
     </ThemeProvider>
