@@ -1,21 +1,32 @@
 import '@/App.css'
 import { ThemeProvider } from '@/components/theme-provider'
-import { FormProvider } from './context/formContext'
+import { FormProvider } from '@/context/formContext'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ModeToggle } from '@/components/ui/mode-toggle'
-import Register from '@/components/Register'
 import { Toaster } from '@/components/ui/toaster'
-function App() {
+import Register from '@/pages/Register'
+import UserProfile from '@/pages/UserProfile'
+import UserProfileEdit from '@/pages/UserProfileEdit'
 
+function App():JSX.Element {
   return (
     <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
-      <FormProvider>
-        <div className='min-h-screen flex flex-col  items-center pt-10'>
-          <ModeToggle  className="fixed top-6 right-6"/>
-          <Register />
+      <Router>
+        <FormProvider>
           <Toaster />
-        </div>
-      </FormProvider>
-
+          <ModeToggle  className="fixed top-6 right-6"/>
+          <Routes>
+            <Route path='/'  element={(
+              <div className='min-h-screen flex flex-col  items-center pt-10'>
+                <Register />
+              </div>
+            )}/>
+            <Route path='/profile/home' element={<UserProfile />}/>
+            <Route path='/profile/edit' element={<UserProfileEdit />}/>
+          </Routes>
+        </FormProvider>
+        </Router>
+   
     </ThemeProvider>
   )
 }

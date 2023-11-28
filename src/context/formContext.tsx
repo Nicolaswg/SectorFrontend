@@ -5,6 +5,7 @@ const FormContext = createContext<FormContextProps | undefined>(undefined)
 
 export const FormProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [formData, setFormData] = useState<FormData>({
+    id: "",
     name: '',
     sector: '',
     terms: true
