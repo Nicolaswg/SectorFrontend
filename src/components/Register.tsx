@@ -27,16 +27,19 @@ import { useToast } from "@/components/ui/use-toast"
 
 import { useForm } from "react-hook-form"
 import { registerSchema } from "@/validators/register"
-import {z} from "zod"
+import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { postFormSectors } from "@/api/api"
 import useSectors from "@/hooks/useSectors"
+import { useFormContext } from "@/context/formContext"
 type Input = z.infer<typeof registerSchema>
 
 
 function Register() {
   const {data, loading, error} = useSectors()
   const {toast} = useToast()
+  const {setFormData} = useFormContext()
+
   const form = useForm<Input>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -47,9 +50,18 @@ function Register() {
   })
 
   const submitForm = async(inputData: Input) => {
+    
     const {name, sector, terms} = inputData
+    
     await postFormSectors({name: name.toLocaleLowerCase(), sector, terms})
     
+    setFormData((prevData) => ({
+      ...prevData,
+      name,
+      sector,
+      terms
+    }))
+
     toast({
       title: "Data send to backend",
       description: (
@@ -61,7 +73,7 @@ function Register() {
   }
 
   return (
-    <Card className="w-[350px]">
+    <Card className="max-w-sm mx-auto mt-9 sm:max-w-md md:w-[350px]">
       <CardHeader>
         <CardTitle>User Sector Registration 📫</CardTitle>
         <CardDescription>Please enter your name and pick the Sectors you are currently involved in. 📌</CardDescription>
@@ -76,7 +88,7 @@ function Register() {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your name..." {...field} />
+                <Input placeholder="Enter your name..." onChange={field.onChange}  />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -88,10 +100,10 @@ function Register() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Sector</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange}>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your sector" />
+                  <SelectTrigger >
+                    <SelectValue placeholder="Select your sector" {...field }/>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

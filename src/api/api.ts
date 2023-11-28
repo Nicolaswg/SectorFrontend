@@ -1,10 +1,5 @@
 import axios from 'axios'
-
-interface FormData {
-  name: string
-  sector: string
-  terms: boolean
-}
+import { FormData } from '@/types/interface'
 
 const api = axios.create({
   baseURL: 'https://sector-backend.vercel.app/api/v1',
