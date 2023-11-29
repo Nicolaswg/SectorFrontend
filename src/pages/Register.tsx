@@ -7,8 +7,22 @@ import {
 } from "@/components/ui/card"
 
 import UserSectorForm from "@/components/UserSectorForm"
+import { useFormContext } from "@/context/formContext"
+import { useEffect } from "react"
+
 
 function Register() {
+  const { formData,setFormData } = useFormContext()
+
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      name: "",
+      sector: "",
+      terms: true
+    }))
+  }, [formData, setFormData])
+
   return (
     <Card className="max-w-sm mx-auto mt-9 sm:max-w-md md:w-[350px]">
       <CardHeader>

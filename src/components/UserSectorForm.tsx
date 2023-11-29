@@ -183,7 +183,7 @@ function UserSectorForm({reuse = false, method}: Props) {
         <div className="flex justify-between">
         <Button type="submit">Submit</Button>
         {location.pathname !== "/" && (
-        <Button onClick={() => setFormData({id:"", name: "", sector: "", terms: true})}>
+        <Button>
           <Link to={"/"}>Home</Link>
         </Button>
         )}

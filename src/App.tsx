@@ -9,6 +9,7 @@ import UserProfile from '@/pages/UserProfile'
 import UserProfileEdit from '@/pages/UserProfileEdit'
 
 function App():JSX.Element {
+  
   return (
     <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
       <Router>
